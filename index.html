@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>RSVP - Malad Jamaat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="rsvp.css" />
+    <link rel="icon" type="image/png" href="hussain.png" />
+    <!-- <script src='main.js'></script>-->
+  </head>
+  <body>
+    <div id="toast">
+      <div id="img"><img src="./hussain.png" alt="hussain" /></div>
+      <div id="desc">Thanks for the info</div>
+    </div>
+    <div id="wait">
+      <div id="img"><img src="./hussain.png" alt="hussain" /></div>
+      <div id="desc">Please wait while we process</div>
+    </div>
+    <div id="error">
+      <div id="img"><img src="./hussain.png" alt="hussain" /></div>
+      <div id="desc">HOF ITS and count is required</div>
+    </div>
+    <div id="container">
+      <img src="./jamaat-trans.png" class="logo" alt="Malad Jamaat" />
+      <h1>Malad Jamaat</h1>
+      <h1>&bull; RSVP &bull;</h1>
+      <div class="underline"></div>
+      <div class="icon_wrapper">
+        <img src="./rsvp.png" alt="rsvp" />
+      </div>
+      <form action="#" method="post" id="contact_form">
+        <div class="name">
+          <label for="hof">HOF ITS</label>
+          <input
+            type="text"
+            placeholder="HOF ITS"
+            name="hof"
+            id="hof"
+            required
+          />
+        </div>
+        <div class="subject">
+          <label for="adult">Adult</label>
+          <select name="adult" id="adult" required>
+            <option disabled hidden selected value="">Adult</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="subject">
+          <label for="child">Child (4-12 years)</label>
+          <select name="child" id="child" required>
+            <option disabled hidden selected value="">
+              Child (4-12 years)
+            </option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="submit">
+          <input type="submit" value="Confirm" id="form_button" />
+        </div>
+        <div class="createby">
+          <h6>
+            <a
+              href="https://api.whatsapp.com/send?phone=+919768062647&text=Hello,%20please%20help%20me%20build%20our/my%20website."
+              target="_blank"
+            >
+              Built With Care By Idrees Tarwadi</a
+            >
+          </h6>
+        </div>
+      </form>
+      <!-- // End form -->
+    </div>
+    <!-- // End #container -->
+    <script src="./jquery.min.js"></script>
+    <script src="./fingerprint2.js"></script>
+    <script>
+      const toastWait = () => {
+        var x = document.getElementById("wait");
+        x.className = "show";
+      };
+      const removeWait = () => {
+        var x = document.getElementById("wait");
+        x.className = x.className.replace("show", "");
+      };
+      const toastLoad = () => {
+        var x = document.getElementById("toast");
+        x.className = "show";
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 5000);
+      };
+      const toastError = () => {
+        var x = document.getElementById("error");
+        x.className = "show";
+        setTimeout(function () {
+          x.className = x.className.replace("show", "");
+        }, 5000);
+      };
+
+      const fp = new Fingerprint2();
+      let fingerPrintResult = "";
+      fp.get((result) => {
+        fingerPrintResult = result;
+      });
+
+      $("#form_button").click(function (e) {
+        toastWait();
+        e.preventDefault();
+        if (
+          validatehofits() == true &&
+          $("#adult").val() &&
+          $("#child").val()
+        ) {
+          const self = this;
+          this.disabled = true;
+          const myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          const raw = JSON.stringify({
+            hof: $("#hof").val(),
+            adult: +$("#adult").val(),
+            child: +$("#child").val(),
+            fingerPrint: fingerPrintResult,
+          });
+
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+          };
+
+          fetch("https://rsvp-372207.el.r.appspot.com/rsvp", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+              $("#contact_form")[0].reset();
+              removeWait();
+              self.disabled = false;
+              toastLoad();
+            })
+            .catch((error) => {
+              console.log("error", error);
+              self.disabled = false;
+              removeWait();
+            });
+        } else {
+          toastError();
+          removeWait();
+        }
+      });
+      function validatehofits() {
+        let hofits = $("#hof").val();
+
+        let regex = /^[1-9][0-9]{7}$/;
+        if (regex.test(hofits)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
