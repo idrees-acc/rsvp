@@ -27,6 +27,23 @@ fp.get((result) => {
   fingerPrintResult = result;
 });
 
+const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const requestOptions = {
+  method: "GET",
+  headers: myHeaders,
+};
+
+fetch("http://localhost:4000/current-count", requestOptions)
+  .then((response) => response.text())
+  .then((result) => {
+    $("#currentCount").text(JSON.parse(result).totalCount);
+  })
+  .catch((error) => {
+    console.log("error", error);
+  });
+
 $("#form_button").click(function (e) {
   toastWait();
   e.preventDefault();

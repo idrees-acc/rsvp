@@ -471,7 +471,11 @@ body #wait #desc {
   margin: 10px 0px 0px;
 }
 
-#contact_form label{
+#contact_form label {
   float: left;
   padding-bottom: 15px;
+}
+
+.color-red {
+  color: red;
 }
