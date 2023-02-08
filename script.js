@@ -35,7 +35,7 @@ const requestOptions = {
   headers: myHeaders,
 };
 
-fetch("http://localhost:4000/current-count", requestOptions)
+fetch("https://rsvp-372207.el.r.appspot.com/current-count", requestOptions)
   .then((response) => response.text())
   .then((result) => {
     $("#currentCount").text(JSON.parse(result).totalCount);
