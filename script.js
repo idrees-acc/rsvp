@@ -27,22 +27,26 @@ fp.get((result) => {
   fingerPrintResult = result;
 });
 
-const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+const getCount = () => {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
 
-const requestOptions = {
-  method: "GET",
-  headers: myHeaders,
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+  };
+
+  fetch("https://rsvp-372207.el.r.appspot.com/current-count", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      $("#currentCount").text(JSON.parse(result).totalCount);
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
 };
 
-fetch("https://rsvp-372207.el.r.appspot.com/current-count", requestOptions)
-  .then((response) => response.text())
-  .then((result) => {
-    $("#currentCount").text(JSON.parse(result).totalCount);
-  })
-  .catch((error) => {
-    console.log("error", error);
-  });
+getCount();
 
 $("#form_button").click(function (e) {
   toastWait();
@@ -72,6 +76,7 @@ $("#form_button").click(function (e) {
         removeWait();
         self.disabled = false;
         toastLoad();
+        getCount();
       })
       .catch((error) => {
         console.log("error", error);
