@@ -40,10 +40,11 @@ const getCount = () => {
   fetch(`${baseUrl}/entries/stats`, requestOptions)
     .then((response) => response.text())
     .then((result) => {
-      console.log("JSON.parse(result).totalEntries ::: ",JSON.parse(result).data.totalEntries)
-      $("#currentCount").text(JSON.parse(result)?.data?.totalEntries);
-      $("#totalAdult").text(JSON.parse(result)?.data?.totalAdults);
-      $("#totalChild").text(JSON.parse(result)?.data?.totalChildren);
+      const parsedResp = JSON.parse(result)?.data;
+      let totalCount = 0;
+      totalCount += parsedResp.totalAdults;
+      totalCount += parsedResp.totalChildren;
+      $("#currentCount").text(totalCount);
     })
     .catch((error) => {
       console.log("error", error);
@@ -73,8 +74,7 @@ $("#form_button").click(function (e) {
       body: raw,
     };
 
-    console.log("requestOptions ::: ",requestOptions);
-    
+    console.log("requestOptions ::: ", requestOptions);
 
     fetch(`${baseUrl}/entries`, requestOptions)
       .then((response) => response.text())
