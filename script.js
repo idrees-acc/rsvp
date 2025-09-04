@@ -1,3 +1,4 @@
+const baseUrl = "https://rsvp-vercel.onrender.com/api";
 const toastWait = () => {
   var x = document.getElementById("wait");
   x.className = "show";
@@ -36,10 +37,13 @@ const getCount = () => {
     headers: myHeaders,
   };
 
-  fetch("https://rsvp-372207.el.r.appspot.com/current-count", requestOptions)
+  fetch(`${baseUrl}/entries/stats`, requestOptions)
     .then((response) => response.text())
     .then((result) => {
-      $("#currentCount").text(JSON.parse(result).totalCount);
+      console.log("JSON.parse(result).totalEntries ::: ",JSON.parse(result).data.totalEntries)
+      $("#currentCount").text(JSON.parse(result)?.data?.totalEntries);
+      $("#totalAdult").text(JSON.parse(result)?.data?.totalAdults);
+      $("#totalChild").text(JSON.parse(result)?.data?.totalChildren);
     })
     .catch((error) => {
       console.log("error", error);
@@ -57,9 +61,9 @@ $("#form_button").click(function (e) {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
-      hof: $("#hof").val(),
-      adult: +$("#adult").val(),
-      child: +$("#child").val(),
+      HOF: $("#hof").val(),
+      Adult: +$("#adult").val(),
+      Child: +$("#child").val(),
       fingerPrint: fingerPrintResult,
     });
 
@@ -69,7 +73,10 @@ $("#form_button").click(function (e) {
       body: raw,
     };
 
-    fetch("https://rsvp-372207.el.r.appspot.com/rsvp", requestOptions)
+    console.log("requestOptions ::: ",requestOptions);
+    
+
+    fetch(`${baseUrl}/entries`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         $("#contact_form")[0].reset();
